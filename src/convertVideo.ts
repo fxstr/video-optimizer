@@ -1,7 +1,8 @@
 import { spawn } from 'child_process';
 import { PassThrough } from 'node:stream';
 import convertTimeToMs from './convertTimeToMs.js';
-import QueryParameterError from './QueryParameterError.js';
+import type { NormalizedParameters } from './types/NormalizedParameters.js';
+import generateFFmpegArguments from './generateFFmpegArguments.js';
 
 type ReturnPromiseValue = { stream: PassThrough, cancel: () => Promise<void> };
 
@@ -40,12 +41,12 @@ const returnError = ({
  * transcoding a video that's not needed.
 */
 export default ({
-  ffmpegArguments = [],
+  ffmpegArguments,
   errorCallback = (): void => {},
 } : {
-  ffmpegArguments?: string[],
+  ffmpegArguments: NormalizedParameters,
   errorCallback?: (error: Error) => void,
-} = {}): Promise<ReturnPromiseValue> => {
+}): Promise<ReturnPromiseValue> => {
   let resolve: (value: { stream: PassThrough, cancel: () => Promise<void> }) => void;
   let reject: (reason: Error) => void;
 
@@ -61,11 +62,12 @@ export default ({
   });
 
   const startTime = performance.now();
+  const consoleArguments = generateFFmpegArguments(ffmpegArguments).ffmpegArguments;
 
   // Use pure ffmpeg command; if we'd use ffmpeg-static or similar, the static version (which is
   // precompiled for easy installation that we don't need because we got Docker) might not
   // be as optimized as it should/could be.
-  const ffmpeg = spawn('ffmpeg', ffmpegArguments);
+  const ffmpeg = spawn('ffmpeg', consoleArguments);
 
   ffmpeg.on('error', (error: Error): void => {
     returnError({
@@ -127,8 +129,7 @@ export default ({
     // resolved. In that case use errorCallback, else reject.
     if (isError) {
       const error = fileNotFound
-        ? new QueryParameterError('The URL you passed as source could not be accessed.')
-        // TODO: We should not expose our internal error messages and logic
+        ? new Error(`Source movie not found.`) 
         : new Error(`FFmpeg process exited with code ${code?.toString() ?? ''}:\n ${errorMessage}`);
       returnError({
         reject,
