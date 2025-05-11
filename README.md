@@ -8,7 +8,7 @@ FFmpeg (not part of this package).
 
 ## Install
 ```bash
-npm i video-optimizer`
+npm i video-optimizer
 ```
 
 **Important:** You must have a working installation of FFmpeg available under `ffmpeg`.
@@ -52,6 +52,6 @@ To test a single file: `npm run test:watch -- path/to-file.ts`.
 
 To run a single test: `npm run test:watch -- -t "name of the test"`.
 
-# Deplloy it
+# Deploy it
 
 `npm run publish` (makes sure that TypeScript is compiled first)
