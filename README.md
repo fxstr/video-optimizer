@@ -1,48 +1,57 @@
 # Intro
 
-Basically makes [FFmpeg](https://www.ffmpeg.org/) easily accessible through a URL-based interface
-and transcodes videos from a provided source in real time.
+Basically makes [FFmpeg](https://www.ffmpeg.org/) easily accessible through an object-based
+interface and transcodes videos to a stream. No dependencies – except for a local installation of
+FFmpeg (not part of this package).
 
-Example URL: `http://localhost:1234/convert?source=https://example.com/video.mov&format=av1&size=720/`.
+# Use
 
-# Setup
+## Install
+```bash
+npm i video-optimizer`
+```
 
-## Run it
+**Important:** You must have a working installation of FFmpeg available under `ffmpeg`.
 
-Run locally: `npm i`, then `npm start`.
+## Invoke
+```javascript
+import { convertVideo } from 'video-optimizer';
 
-Docker:
-- `docker build -t video-optimizer .`
-- `docker run -d -p 1234:3000 video-optimizer` to expose it on `localhost:1234`
+// Will be called when an error happens, which may be heavily asynchronously
+const errorCallback = (error: Error): void => { console.error(error); };
+// Define where to get and how to transcode the video
+const ffmpegArguments = {
+  source: 'https://fxstr.com/out/test.mp4',
+  format: 'av1',
+  height: 720,
+  width: 1280,
+  trimStartMs: 1000,
+  trimEndMs: 2000,
+  quality: 60,
+  fps: 20,
+  keyframeInterval: 10,
+};
 
-## Deploy it
+const { stream } = await convertVideo({ ffmpegArguments, errorCallback });
 
-[Install fly](https://fly.io/docs/flyctl/install/), create an account, login, then:
+const chunks: Buffer[] = [];
+stream.on('data', (chunk: Buffer): void => { chunks.push(chunk); });
+stream.on('end', (): void => {
+  const result = Buffer.concat(chunks);
+  console.log('Transcoded video is %d bytes long', result.length);
+});
+```
+## Arguments
+See the [TypeScript definition](./src/types/NormalizedParameters.ts). 
 
-### Production
-Create: `fly apps create video-optimizer-production --org video-optimizer`
-Deploy: `flyctl deploy -c fly.production.toml`
-
-### Staging
-Create: `fly apps create video-optimizer-staging --org video-optimizer`
-Deploy: `flyctl deploy -c fly.staging.toml`
-
-## Test it
+# Test it
 
 `npm test` or `npm run test:watch`
 
-To test a single file: `npm test:watch -- path/to-file.ts`. 
+To test a single file: `npm run test:watch -- path/to-file.ts`. 
 
-To run a single test: `npm test:watch -t "name of the test"`.
+To run a single test: `npm run test:watch -- -t "name of the test"`.
 
-# API
+# Deplloy it
 
-See the [API docs](docs/API.md).
-
-- We do not use aliases to facilitate caching.
-- We try to keep parameters easily understandable and easy to use (one parameter with multiple
-values instead of multiple parameters with one value).
-- We do not shorten parameters as their size (a few bytes) is negligible compared to the video's
-size.
-- As parameter names we use property, not function names (e.g. time instead of trim). Why? Because
-URLs are resource locators that return a response for the properties provided.
+`npm run publish` (makes sure that TypeScript is compiled first)

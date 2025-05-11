@@ -1,4 +1,3 @@
-import QueryParameterError from './QueryParameterError.js';
 import { NormalizedParameters } from './types/NormalizedParameters.js';
 import mapQuality from './mapQuality.js';
 
@@ -19,10 +18,10 @@ export default (normalizedParameters: NormalizedParameters): ReturnProperties =>
   // As the requirement for even numbers is quite ffmpeg specific, we'll check for it here
   // Reason: RGB to YUV, see https://stackoverflow.com/a/23614652/25041219
   if ((height && height % 2 !== 0)) {
-    throw new QueryParameterError(`Height must be an even number; you used ${height.toString()} instead.`);
+    throw new Error(`Height must be an even number; you used ${height.toString()} instead.`);
   }
   if ((width && width % 2 !== 0)) {
-    throw new QueryParameterError(`Width must be an even number; you used ${width.toString()} instead.`);
+    throw new Error(`Width must be an even number; you used ${width.toString()} instead.`);
   }
   if (width && !height) {
     ffmpegArguments.push('-vf', `scale=${width.toString()}:trunc(ow/a/2)*2`);
