@@ -7,7 +7,7 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watchAll",
-    "start": "npx tsc -w"
+    "publish": "npx tsc && npm publish"
   },
   "author": "",
   "license": "ISC",

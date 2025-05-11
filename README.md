@@ -51,3 +51,7 @@ See the [TypeScript definition](./src/types/NormalizedParameters.ts).
 To test a single file: `npm run test:watch -- path/to-file.ts`. 
 
 To run a single test: `npm run test:watch -- -t "name of the test"`.
+
+# Deplloy it
+
+`npm run publish` (makes sure that TypeScript is compiled first)
