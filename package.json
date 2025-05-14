@@ -1,6 +1,6 @@
 {
   "name": "video-optimizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -12,8 +12,7 @@
   "author": "",
   "license": "ISC",
   "description": "Small wrapper around ffmpeg to facilitate interactions; takes arguments as an object, returns a stream.",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^8.57.1",
     "@types/jest": "^29.5.14",
