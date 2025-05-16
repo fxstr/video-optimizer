@@ -129,7 +129,7 @@ export default ({
     // resolved. In that case use errorCallback, else reject.
     if (isError) {
       const error = fileNotFound
-        ? new Error(`Source movie not found.`) 
+        ? new Error('Source movie not found.') 
         : new Error(`FFmpeg process exited with code ${code?.toString() ?? ''}:\n ${errorMessage}`);
       returnError({
         reject,

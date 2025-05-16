@@ -3,7 +3,7 @@ import { NormalizedParameters } from './types/NormalizedParameters.js';
 
 const generateDefaultParameters = (): NormalizedParameters => ({
   source: 'https://example.com/video.mp4',
-  format: null,
+  format: 'h264',
   width: null,
   height: null,
   trimStartMs: null,
@@ -32,7 +32,7 @@ describe('format', (): void => {
   });
 
   test('returns the expected arguments for av1', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'av1' };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'av1' };
     const ffmpegArguments = generateFFmpegArguments(params);
     expect(ffmpegArguments).toEqual({
       ffmpegArguments: [
@@ -49,7 +49,7 @@ describe('format', (): void => {
   });
 
   test('returns the expected arguments for jpg', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'jpg' };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'jpg' };
     const ffmpegArguments = generateFFmpegArguments(params);
     expect(ffmpegArguments).toEqual({
       ffmpegArguments: [
@@ -145,38 +145,38 @@ describe('handles fps', (): void => {
 
 describe('quality', (): void => {
   test('sets quality on h264', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'h264', quality: 20 };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'h264', quality: 20 };
     const { ffmpegArguments } = generateFFmpegArguments(params);
     const crfIndex = ffmpegArguments.indexOf('-crf');
     // Quality is 20%; on a 51➝0 scale, that is 40.8, rounded 41
     expect(ffmpegArguments.at(crfIndex + 1)).toBe('41');
   });
   test('does not set quality on h264 if not provided', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'h264' };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'h264' };
     const { ffmpegArguments } = generateFFmpegArguments(params);
     expect(ffmpegArguments.includes('-crf')).toBe(false);
   });
   test('sets quality on av1', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'av1', quality: 20 };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'av1', quality: 20 };
     const { ffmpegArguments } = generateFFmpegArguments(params);
     const crfIndex = ffmpegArguments.indexOf('-crf');
     // Quality is 20%; on a 63➝0 scale, that is 50.4, rounded 50
     expect(ffmpegArguments.at(crfIndex + 1)).toBe('50');
   });
   test('does not set quality on av1 if not provided', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'av1' };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'av1' };
     const { ffmpegArguments } = generateFFmpegArguments(params);
     expect(ffmpegArguments.includes('-crf')).toBe(false);
   });
   test('sets quality on jpg', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'jpg', quality: 20 };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'jpg', quality: 20 };
     const { ffmpegArguments } = generateFFmpegArguments(params);
     const qvIndex = ffmpegArguments.indexOf('-q:v');
     // Quality is 20%; on a 31➝1 scale, that is 24.8, rounded 25
     expect(ffmpegArguments.at(qvIndex + 1)).toBe('25');
   });
   test('does not set quality on jpg if not provided', (): void => {
-    const params = { ...generateDefaultParameters(), format: 'jpg' };
+    const params: NormalizedParameters = { ...generateDefaultParameters(), format: 'jpg' };
     const { ffmpegArguments } = generateFFmpegArguments(params);
     expect(ffmpegArguments.includes('-q:v')).toBe(false);
   });

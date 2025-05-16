@@ -50,7 +50,9 @@ export default (normalizedParameters: NormalizedParameters): ReturnProperties =>
   if (normalizedParameters.fps) ffmpegArguments.push('-r', normalizedParameters.fps.toString());
 
   // Type – should be at the very end
-  const format = normalizedParameters.format || 'h264';
+  // We could remove the default here; it's now handled in the before-executed normalizeParameters
+  // function.
+  const { format } = normalizedParameters;
   if (format === 'h264') {
     ffmpegArguments.push('-c:v', 'libx264');
     ffmpegArguments.push('-preset', 'ultrafast');

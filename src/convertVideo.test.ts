@@ -14,7 +14,7 @@ const generateFFmpegArguments = (): NormalizedParameters => ({
   width: null,
   trimStartMs: null,
   trimEndMs: null,
-  format: null,
+  format: 'h264',
   fps: null,
   quality: null,
   keyframeInterval: null,

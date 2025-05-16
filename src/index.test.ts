@@ -1,4 +1,4 @@
-import { convertVideo } from './index';
+import { convertVideo, NormalizedParameters } from './index';
 
 test('exports convertVideo', (): void => {
   expect(convertVideo).toBeInstanceOf(Function);
@@ -14,7 +14,7 @@ test('example in readme works', async (): Promise<void> => {
   // Will be called when an error happens, which may be heavily asynchronously
   const errorCallback = (error: Error): void => { console.error(error); };
   // Define where to get and how to transcode the video
-  const ffmpegArguments = {
+  const ffmpegArguments: NormalizedParameters = {
     source: 'https://fxstr.com/out/test.mp4',
     format: 'av1',
     height: 720,
